@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - master
   pull_request:
 
 permissions:
@@ -11,53 +12,21 @@ permissions:
 
 jobs:
   lint:
+    name: PHP Lint
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - language: generic
-            setup: none
-            version: ""
-            install: ""
-            lint: "echo 'Set your lint command in .github/workflows/lint.yml' && exit 1"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        if: matrix.setup == 'python'
-        uses: actions/setup-python@v5
+      - name: Setup PHP 8.3
+        uses: shivammathur/setup-php@v2
         with:
-          python-version: "${{ matrix.version }}"
+          php-version: '8.3'
+          tools: composer:v2
 
-      - name: Setup Node.js
-        if: matrix.setup == 'node'
-        uses: actions/setup-node@v4
-        with:
-          node-version: "${{ matrix.version }}"
+      - name: Validate composer.json
+        run: composer validate --strict
 
-      - name: Setup Go
-        if: matrix.setup == 'go'
-        uses: actions/setup-go@v5
-        with:
-          go-version: "${{ matrix.version }}"
-
-      - name: Setup Java
-        if: matrix.setup == 'java'
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: "${{ matrix.version }}"
-
-      - name: Setup Rust
-        if: matrix.setup == 'rust'
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Install lint dependencies
-        if: matrix.install != ''
-        run: ${{ matrix.install }}
-
-      - name: Run lint
-        run: ${{ matrix.lint }}
+      - name: PHP syntax lint
+        run: find src tests -name '*.php' -print0 | xargs -0 -n1 php -l

@@ -2,7 +2,33 @@ dist/
 build/
 
 .DS_Store
+Thumbs.db
 .idea/
 .vscode/
 *.swp
 *.swo
+
+# PHP / Composer
+/vendor/
+composer.phar
+*.phar
+
+# Environment
+.env
+.env.local
+
+# Logs and caches
+*.log
+.phpunit.result.cache
+
+# Dependencies
+node_modules/
+
+# Build artifacts and archives
+*.zip
+*.tar.gz
+*.rar
+
+# Coverage
+coverage/
+

@@ -1,0 +1,34 @@
+{
+  "name": "ihu/scorm-engine-sdk",
+  "description": "PHP SDK for SCORM Engine REST API",
+  "type": "library",
+  "license": "MIT",
+  "require": {
+    "php": "^8.2",
+    "psr/http-client": "^1.0",
+    "psr/http-message": "^1.1 || ^2.0",
+    "psr/http-factory": "^1.0",
+    "psr/log": "^1.1 || ^2.0 || ^3.0",
+    "guzzlehttp/psr7": "^2.7"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.0",
+    "friendsofphp/php-cs-fixer": "^3.65"
+  },
+  "autoload": {
+    "psr-4": {
+      "ScormEngineSdk\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "ScormEngineSdk\\Tests\\": "tests/"
+    }
+  },
+  "scripts": {
+    "test": "phpunit --colors=always",
+    "lint": "php-cs-fixer fix --dry-run --diff"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}
