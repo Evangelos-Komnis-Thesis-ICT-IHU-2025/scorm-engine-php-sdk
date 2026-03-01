@@ -20,6 +20,8 @@ jobs:
     name: PHP SDK Test Suite
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     steps:
       - name: Checkout
@@ -29,10 +31,28 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
+          coverage: pcov
           tools: composer:v2
 
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
 
-      - name: Run tests
-        run: composer test
+      - name: Run tests with coverage
+        run: |
+          mkdir -p build/logs
+          vendor/bin/phpunit --colors=always --coverage-clover build/logs/clover.xml
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: scorm-engine-php-sdk-clover-xml
+          path: build/logs/clover.xml
+          if-no-files-found: error
+
+      - name: Upload coverage to Codecov
+        if: ${{ env.CODECOV_TOKEN != '' }}
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ env.CODECOV_TOKEN }}
+          files: build/logs/clover.xml
+          flags: scorm-engine-php-sdk
